@@ -1,16 +1,15 @@
 const selectQuestions = document.getElementById("selectQuestions");
 const ansInput = document.getElementById("ansInput");
-const sendbtn = document.getElementById("sendBtn");
+const sendbtn = document.getElementById("btn-start");
 const questionText = document.getElementById("questionText");
-const count = document.getElementById("questionCount");
 const quizdiv = document.getElementById("quizDiv");
 const totalNum = document.getElementById("qTotal");
-const currentNum = document.getElementById("qCurr");
+const currentNum = document.getElementById("currentNum");
 
 let questions = [];
 let questionObj = {};
-let summ = 0;
 let current = 0;
+let score = 0;
 
 async function init() {
   const questionShi = await fetch("questions.json");
@@ -31,7 +30,7 @@ function chooseQuestions() {
 function startQuiz() {
   const choosenPerson = selectQuestions.value;
   questions = questionObj[choosenPerson];
-  console.log(questions);
+  console.log(questionObj);
   current = 0;
 
   quizdiv.classList.remove("d-none");
@@ -44,7 +43,24 @@ function showQuestions() {
   current++;
   ansInput.value = "";
   totalNum.textContent = questions.length;
+  console.log(current, currentNum)
   currentNum.textContent = current;
+}
+
+function review() {
+  if (current === questions.length) {
+    quizdiv.classList.add("d-none");
+    return;
+  }
+
+  const userAns = ansInput.value.trim();
+  const ans = questions[current].answer.trim();
+
+  if (userAns.toLowerCase() === ans.toLowerCase()) {
+    score++;
+  }
+
+  showQuestions();
 }
 
 init();
